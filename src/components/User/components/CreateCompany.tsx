@@ -16,11 +16,11 @@ export default class CreateCompany extends Component {
     this.setState({ show: true });
   };
 
-  onChange = (e) => {
+  onChange = (e: any) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  newCompany = async (e) => {
+  newCompany = async (e: any) => {
     e.preventDefault();
     const r = window.confirm(
       "Seguro que quieres registrar la cuenta como empresa?"

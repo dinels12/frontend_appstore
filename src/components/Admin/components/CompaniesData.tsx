@@ -19,8 +19,8 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CompaniesData({ companies }) {
-  const classes = useStyles;
+export default function CompaniesData({ companies }: any) {
+  const classes = useStyles();
   return (
     <TableContainer component={Paper} className='mt-2'>
       <Table className={classes.table} aria-label='simple table'>
@@ -51,7 +51,7 @@ export default function CompaniesData({ companies }) {
               plan,
               maxProductActive,
               expiredPlanDate,
-            }) => (
+            }: any) => (
               <TableRow key={_id}>
                 <TableCell component='th' scope='row'>
                   {nick}

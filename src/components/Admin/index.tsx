@@ -6,9 +6,9 @@ import CompaniesData from "./components/CompaniesData";
 export const AdminWelcomeScreen = () => {
   return <WelcomeScreen />;
 };
-export const AdminUsersData = ({ data }) => {
+export const AdminUsersData = ({ data }: any) => {
   return <UsersData users={data} />;
 };
-export const AdminCompaniesData = ({ data }) => {
+export const AdminCompaniesData = ({ data }: any) => {
   return <CompaniesData companies={data} />;
 };

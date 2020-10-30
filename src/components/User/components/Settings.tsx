@@ -1,7 +1,9 @@
 import React from "react";
 import { Paper } from "@material-ui/core";
 
-const Settings = ({ user: { name, lastname, nick, lastLogin, email } }) => {
+const Settings = ({
+  user: { name, lastname, nick, lastLogin, email },
+}: any) => {
   return (
     <div className='container mt-5'>
       <div className='row'>

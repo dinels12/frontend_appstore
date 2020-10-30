@@ -11,7 +11,7 @@ import { Dashboard, Settings } from "./components/User";
 import Business from "./components/Company/Business";
 import Navbar from "./components/Navigation/Navigation";
 import WelcomeScreen from "./components/WelcomeScreen";
-import ShopView from "./components/ShopView";
+import ShopView from "./components/ShopView/index";
 import { useQuery, gql } from "@apollo/client";
 import {
   EditProduct,
@@ -21,7 +21,7 @@ import {
   AdminWelcomeScreen,
   AdminCompaniesData,
   AdminUsersData,
-} from "./components/Admin/";
+} from "./components/Admin";
 import { Login, Register } from "./components/Auth";
 
 // import io from "socket.io-client";
@@ -114,14 +114,14 @@ const GET_DATA = gql`
   }
 `;
 
-export function AdminApp({ user }) {
+const AdminApp = ({ user }: any) => {
   const { loading, error, data } = useQuery(GET_DATA, { pollInterval: 1000 });
   if (loading) return null;
   if (error) return <div>Error: {error.message}</div>;
 
   const {
     getServerData: { users, companies },
-  } = data;
+  }: any = data;
 
   return (
     <>
@@ -142,39 +142,37 @@ export function AdminApp({ user }) {
       </Router>
     </>
   );
-}
+};
 
-export function CompanyApp({ user }) {
+const CompanyApp = ({ user }: any) => {
   const { loading, error, data } = useQuery(GET_COMPANY, {
     variables: { ownerId: user._id },
     pollInterval: 1000,
   });
   if (loading) return null;
   if (error) return <div>Error: ${error.message}</div>;
-  if (data) {
-    const {
-      getCompany: { company, products },
-    } = data;
-    localStorage.setItem("companyId", company._id);
-    return (
-      <>
-        <Router>
-          <Navbar user={user} company={company} />
-          <Switch>
-            <Route exact path='/'>
-              <Business user={user} company={company} products={products} />
-            </Route>
-            <Route path='/product/new' component={CreateProduct} />
-            <Route path='/product/edit/:id' component={EditProduct} />
-            <Redirect to='/' />
-          </Switch>
-        </Router>
-      </>
-    );
-  }
-}
+  const {
+    getCompany: { company, products },
+  } = data;
+  localStorage.setItem("companyId", company._id);
+  return (
+    <>
+      <Router>
+        <Navbar user={user} company={company} />
+        <Switch>
+          <Route exact path='/'>
+            <Business user={user} company={company} products={products} />
+          </Route>
+          <Route path='/product/new' component={CreateProduct} />
+          <Route path='/product/edit/:id' component={EditProduct} />
+          <Redirect to='/' />
+        </Switch>
+      </Router>
+    </>
+  );
+};
 
-export function MainApp({ token }) {
+const MainApp = ({ token }: any) => {
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { token },
     pollInterval: 1000,
@@ -205,9 +203,7 @@ export function MainApp({ token }) {
             <Route path='/settings'>
               <Settings user={getUser} />
             </Route>
-            <Route path='/shop/:id'>
-              <ShopView />
-            </Route>
+            <Route path='/shop/:nick' component={ShopView} />
           </Switch>
         </Router>
       </>
@@ -216,11 +212,13 @@ export function MainApp({ token }) {
     return <CompanyApp user={getUser} />;
   } else if (getUser.role === "ADMIN" && token) {
     return <AdminApp user={getUser} />;
+  } else {
+    return null;
   }
-}
+};
 
-export default function App() {
-  const [user] = useState({ role: "GUEST" });
+const App = () => {
+  const [user]: any = useState({ role: "GUEST" });
   const token = localStorage.getItem("token");
   if (token) return <MainApp token={token} />;
   return (
@@ -231,10 +229,12 @@ export default function App() {
           <Route exact path='/' component={WelcomeScreen} />
           <Route path='/login' component={Login} />
           <Route path='/sign-up' component={Register} />
-          <Route exact path='/shop/:id' component={ShopView} />
+          <Route exact path='/shop/:nick' component={ShopView} />
           <Redirect to='/' />
         </Switch>
       </Router>
     </>
   );
-}
+};
+
+export default App;

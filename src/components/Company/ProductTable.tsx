@@ -40,10 +40,10 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ProductTable({ products }) {
+export default function ProductTable({ products }: any) {
   const [updateProduct] = useMutation(UPDATE_PRODUCT);
   const [deleteProduct] = useMutation(DELETE_PRODUCT);
-  const classes = useStyles;
+  const classes = useStyles();
 
   return (
     <TableContainer component={Paper} className='mt-2'>
@@ -60,7 +60,7 @@ export default function ProductTable({ products }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {products.map((product) => (
+          {products.map((product: any) => (
             <TableRow key={product._id}>
               <TableCell component='th' scope='row'>
                 {product.title}

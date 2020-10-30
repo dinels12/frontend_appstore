@@ -2,10 +2,11 @@ import React from "react";
 import ProductTable from "./ProductTable";
 import { Container } from "react-bootstrap";
 
-export default function Business({ products }) {
+const Business = ({ products }: any) => {
   return (
     <Container>
       <ProductTable products={products} />
     </Container>
   );
-}
+};
+export default Business;

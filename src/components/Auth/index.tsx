@@ -34,12 +34,12 @@ const USER_REGISTER = gql`
   }
 `;
 
-export function Login() {
+export const Login = () => {
   const [userLogin] = useMutation(USER_LOGIN);
   const { register, errors, handleSubmit } = useForm();
   const [message, setMessage] = useState("Iniciar Sesion");
 
-  const onSubmit = async ({ email, password }) => {
+  const onSubmit = async ({ email, password }: any) => {
     const {
       data: {
         userLogin: { message, token },
@@ -67,7 +67,7 @@ export function Login() {
                   <Input
                     type='email'
                     name='email'
-                    fullWidth='true'
+                    fullWidth={true}
                     autoComplete='true'
                     inputRef={register({ required: true })}
                     placeholder='Correo electronico'
@@ -84,7 +84,7 @@ export function Login() {
                     type='password'
                     name='password'
                     autoComplete='true'
-                    fullWidth='true'
+                    fullWidth={true}
                     inputRef={register({ required: true })}
                     placeholder='Contraseña'
                   />
@@ -119,22 +119,19 @@ export function Login() {
       </div>
     </div>
   );
-}
+};
 
-export function Register() {
+export const Register = () => {
   const [userLogin] = useMutation(USER_LOGIN);
   const [createUser] = useMutation(USER_REGISTER);
   const { register, errors, handleSubmit } = useForm();
   const [message, setMessage] = useState("Registrar");
 
-  const onSubmit = async ({ name, email, lastname, password }) => {
-    const { data, error } = await createUser({
+  const onSubmit = async ({ name, email, lastname, password }: any) => {
+    const { data, errors } = await createUser({
       variables: { name, email, lastname, password },
-      onError: (e) => {
-        console.log(e);
-      },
     });
-    if (error) return console.error(error);
+    if (errors) return console.error(errors);
     if (data) {
       const {
         data: {
@@ -162,7 +159,7 @@ export function Register() {
                     name='name'
                     inputRef={register({ required: true })}
                     placeholder='Nombre'
-                    fullWidth='true'
+                    fullWidth={true}
                   />
                   <span className='text-danger'>
                     {errors.name && "Nombre es un campo obligatorio"}
@@ -175,7 +172,7 @@ export function Register() {
                     name='lastname'
                     inputRef={register({ required: true })}
                     placeholder='Apellido'
-                    fullWidth='true'
+                    fullWidth={true}
                   />
                   <span className='text-danger'>
                     {errors.lastname && "Apellido es un campo obligatorio"}
@@ -189,7 +186,7 @@ export function Register() {
                     name='email'
                     inputRef={register({ required: true })}
                     placeholder='Correo Electronico'
-                    fullWidth='true'
+                    fullWidth={true}
                   />
                   <span className='text-danger'>
                     {errors.email &&
@@ -204,7 +201,7 @@ export function Register() {
                     name='password'
                     inputRef={register({ required: true })}
                     placeholder='Contraseña'
-                    fullWidth='true'
+                    fullWidth={true}
                   />
                   <span className='text-danger'>
                     {errors.password && "Contraseña es un campo obligatorio"}
@@ -237,4 +234,4 @@ export function Register() {
       </div>
     </div>
   );
-}
+};

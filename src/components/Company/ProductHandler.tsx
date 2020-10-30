@@ -9,7 +9,7 @@ import { Card } from "react-bootstrap";
 // } from "@material-ui/icons";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { useForm } from "react-hook-form";
-import { Redirect } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 
 const NEW_PRODUCT = gql`
   mutation($input: productInput) {
@@ -44,11 +44,8 @@ const UPDATE_PRODUCT = gql`
   }
 `;
 
-export const EditProduct = ({
-  match: {
-    params: { id },
-  },
-}) => {
+export const EditProduct = () => {
+  const { id }: any = useParams();
   const { register, handleSubmit } = useForm();
   const { loading, error, data } = useQuery(FIND_PRODUCT, {
     variables: {
@@ -57,9 +54,15 @@ export const EditProduct = ({
     pollInterval: 1000,
   });
   const [updateProduct] = useMutation(UPDATE_PRODUCT);
-  const [imagen, setImage] = useState();
+  const [imagen, setImage] = useState("");
 
-  const onSubmit = async ({ title, description, imageURL, stock, price }) => {
+  const onSubmit = async ({
+    title,
+    description,
+    imageURL,
+    stock,
+    price,
+  }: any) => {
     await updateProduct({
       variables: {
         _id: id,
@@ -166,7 +169,13 @@ export const CreateProduct = () => {
   );
   const { register, handleSubmit } = useForm();
 
-  const newProduct = async ({ title, description, stock, price, imageURL }) => {
+  const newProduct = async ({
+    title,
+    description,
+    stock,
+    price,
+    imageURL,
+  }: any) => {
     const r = window.confirm("Seguro que quieres crear un nuevo producto?");
     if (r) {
       const companyId = localStorage.getItem("companyId");

@@ -39,8 +39,8 @@ const useStyles = makeStyles({
   },
 });
 
-export default function UsersData({ users }) {
-  const classes = useStyles;
+export default function UsersData({ users }: any) {
+  const classes = useStyles();
   const [userDeleted] = useMutation(USER_DELETED);
   const [userUpdate] = useMutation(USER_UPDATE);
 
@@ -61,7 +61,7 @@ export default function UsersData({ users }) {
         </TableHead>
         <TableBody>
           {users.map(
-            ({ _id, nick, name, lastname, role, lastLogin, banned }) => (
+            ({ _id, nick, name, lastname, role, lastLogin, banned }: any) => (
               <TableRow key={_id}>
                 <TableCell component='th' scope='row'>
                   {nick}
