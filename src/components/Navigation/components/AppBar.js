@@ -17,8 +17,6 @@ import {
   MoreVert as MoreIcon,
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import NewProduct from "./NewProduct";
-import { Login, Register } from "../../Auth";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -122,7 +120,13 @@ export function CompanyBar(props) {
     >
       <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <NewProduct companyId={props.company._id} />
+        <Link
+          to='/product/new'
+          className='text-dark'
+          style={{ textDecoration: "none" }}
+        >
+          Crear Producto
+        </Link>
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>Mi Cuenta</MenuItem>
       <MenuItem onClick={() => props.logout()}>Salir</MenuItem>
@@ -249,10 +253,22 @@ export function GuestBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>
-        <Login />
+        <Link
+          to='/login'
+          className='text-dark'
+          style={{ textDecoration: "none" }}
+        >
+          Iniciar Sesion
+        </Link>
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <Register />
+        <Link
+          to='/sign-up'
+          className='text-dark'
+          style={{ textDecoration: "none" }}
+        >
+          Registrarse
+        </Link>
       </MenuItem>
     </Menu>
   );
@@ -340,7 +356,75 @@ export function GuestBar() {
   );
 }
 
-export function UserBar(props) {
+export function UserBar({ logout, user }) {
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const isMenuOpen = Boolean(anchorEl);
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const menuId = "primary-search-account-menu";
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
+      <MenuItem
+        onClick={handleMenuClose}
+        component={Link}
+        to='/settings'
+        className='text-dark'
+      >
+        Mi Cuenta
+      </MenuItem>
+      <MenuItem onClick={() => logout()}>Salir</MenuItem>
+    </Menu>
+  );
+
+  return (
+    <div className={classes.grow}>
+      <AppBar position='static'>
+        <Toolbar>
+          <Link to='/' className='text-white navbar-brand'>
+            <Typography className={classes.title} variant='h6' noWrap>
+              AppStore
+            </Typography>
+          </Link>
+
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>
+            <IconButton
+              edge='end'
+              aria-label='account of current user'
+              aria-controls={menuId}
+              aria-haspopup='true'
+              onClick={handleProfileMenuOpen}
+              color='inherit'
+            >
+              <AccountCircle />
+            </IconButton>
+          </div>
+        </Toolbar>
+      </AppBar>
+      {renderMenu}
+    </div>
+  );
+}
+
+export function AdminBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -376,9 +460,25 @@ export function UserBar(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Mi Cuenta</MenuItem>
-      <MenuItem onClick={() => props.logout()}>Salir</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link
+          to='/users'
+          className='text-dark'
+          style={{ textDecoration: "none" }}
+        >
+          Users
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link
+          to='/companies'
+          className='text-dark'
+          style={{ textDecoration: "none" }}
+        >
+          Companies
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={() => props.logout()}>Logout</MenuItem>
     </Menu>
   );
 
@@ -429,7 +529,7 @@ export function UserBar(props) {
         <Toolbar>
           <Link to='/' className='text-white navbar-brand'>
             <Typography className={classes.title} variant='h6' noWrap>
-              {props.name}
+              Admin Dashboard
             </Typography>
           </Link>
 

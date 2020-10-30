@@ -6,12 +6,19 @@ export default class ProductContainer extends Component {
     const { imageURL, description, title, price } = this.props.product;
     return (
       <Card style={{ width: "16em" }}>
-        <Card.Img variant='top' src={imageURL} />
+        <Card.Img
+          variant='top'
+          src={
+            imageURL ||
+            "https://res.cloudinary.com/dinels/image/upload/v1603020508/notFoundImageDefault.jpg"
+          }
+        />
         <Card.Body>
           <Card.Title>{title}</Card.Title>
           <Card.Text>{description}</Card.Text>
+          <Card.Text>${price}</Card.Text>
           <Button block variant='primary'>
-            Comprar {price}
+            Comprar
           </Button>
         </Card.Body>
       </Card>

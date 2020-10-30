@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, Row, Col } from "react-bootstrap";
+import { Input, Button, Paper } from "@material-ui/core";
 import { useMutation, gql } from "@apollo/client";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 const USER_LOGIN = gql`
   mutation userLogin($email: String!, $password: String!) {
@@ -15,207 +14,227 @@ const USER_LOGIN = gql`
 `;
 
 const USER_REGISTER = gql`
-  mutation userLogin($email: String!, $password: String!) {
-    userLogin(email: $email, password: $password) {
-      token
-      message
+  mutation createUser(
+    $name: String
+    $lastname: String
+    $email: String
+    $password: String
+  ) {
+    createUser(
+      input: {
+        name: $name
+        lastname: $lastname
+        email: $email
+        password: $password
+      }
+    ) {
+      _id
+      email
     }
   }
 `;
 
 export function Login() {
   const [userLogin] = useMutation(USER_LOGIN);
-  const { register, handleSubmit } = useForm();
-  const [show, setShow] = useState(false);
+  const { register, errors, handleSubmit } = useForm();
   const [message, setMessage] = useState("Iniciar Sesion");
 
-  const handleClose = () => {
-    setShow(false);
-  };
-
-  const handleShow = () => {
-    setShow(true);
-  };
   const onSubmit = async ({ email, password }) => {
     const {
       data: {
         userLogin: { message, token },
       },
     } = await userLogin({ variables: { email, password } });
-    setMessage(message);
-    localStorage.setItem("token", token);
+    if (message === "Ban") {
+      setMessage("Error, Contactar a soporte.");
+    } else {
+      setMessage(message);
+      localStorage.setItem("token", token);
+      localStorage.setItem("userEmail", email);
+      window.location.href = "/";
+    }
   };
 
   return (
-    <>
-      <div onClick={handleShow}>Iniciar Sesion</div>
-
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop='static'
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Iniciar Sesion</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Correo Electronico</Form.Label>
-                  <Form.Control
+    <div className='container mt-5'>
+      <div className='row'>
+        <div className='col-md-6 offset-3'>
+          <Paper elevation={4}>
+            <h1 className='h3 text-center'>Inicia sesión en AppStore</h1>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className='row mt-3 ml-2 mr-2'>
+                <div className='col'>
+                  <Input
                     type='email'
                     name='email'
-                    ref={register({ required: true })}
-                    placeholder='Correo Electronico'
+                    fullWidth='true'
+                    autoComplete='true'
+                    inputRef={register({ required: true })}
+                    placeholder='Correo electronico'
                   />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Contraseña</Form.Label>
-                  <Form.Control
+                  <span className='text-danger'>
+                    {errors.email &&
+                      "Correo electronico es un campo obligatorio"}
+                  </span>
+                </div>
+              </div>
+              <div className='row mt-3 ml-2 mr-2'>
+                <div className='col'>
+                  <Input
                     type='password'
                     name='password'
-                    ref={register({ required: true })}
+                    autoComplete='true'
+                    fullWidth='true'
+                    inputRef={register({ required: true })}
                     placeholder='Contraseña'
                   />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Button block type='submit' variant='primary'>
-                  {message}
+                  <span className='text-danger'>
+                    {errors.password && "Contraseña es un campo obligatorio"}
+                  </span>
+                </div>
+              </div>
+              <div className='row mt-3 ml-2 mr-2'>
+                <div className='col-md-8 offset-4'>
+                  <Button type='submit' variant='contained' color='primary'>
+                    {message}
+                  </Button>
+                </div>
+              </div>
+            </form>
+            <div className='mt-5'>
+              <h2 className='h5 text-center'>
+                ¿No tienes una cuenta aún?{" "}
+                <Button
+                  color='primary'
+                  component={Link}
+                  variant='outlined'
+                  to='/sign-up'
+                >
+                  Registrate
                 </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
-            Cancelar
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+              </h2>
+            </div>
+          </Paper>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export function Register() {
-  const [show, setShow] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [password, setPassword] = useState("");
+  const [userLogin] = useMutation(USER_LOGIN);
+  const [createUser] = useMutation(USER_REGISTER);
+  const { register, errors, handleSubmit } = useForm();
   const [message, setMessage] = useState("Registrar");
-  const [dateBirth, setDateBirth] = useState(new Date());
 
-  const handleClose = () => {
-    setShow(false);
-  };
-
-  const handleShow = () => {
-    setShow(true);
-  };
-
-  const newAccount = async (e) => {
-    e.preventDefault();
-    console.log({ name, email, lastname, password, dateBirth });
+  const onSubmit = async ({ name, email, lastname, password }) => {
+    const { data, error } = await createUser({
+      variables: { name, email, lastname, password },
+      onError: (e) => {
+        console.log(e);
+      },
+    });
+    if (error) return console.error(error);
+    if (data) {
+      const {
+        data: {
+          userLogin: { message, token },
+        },
+      } = await userLogin({ variables: { email, password } });
+      setMessage(message);
+      localStorage.setItem("token", token);
+      localStorage.setItem("userEmail", email);
+      window.location.href = "/";
+    }
   };
 
   return (
-    <>
-      <div onClick={handleShow}>Registro</div>
-
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop='static'
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Registro</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={newAccount}>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Nombre</Form.Label>
-                  <Form.Control
+    <div className='container mt-5'>
+      <div className='row'>
+        <div className='col-md-6 offset-3'>
+          <Paper elevation={4}>
+            <h1 className='h3 text-center'>Crea una cuenta</h1>
+            <h2 className='h5 text-center'>Es rapido y sencillo</h2>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className='row mt-3 ml-2 mr-2'>
+                <div className='col'>
+                  <Input
                     name='name'
-                    onChange={(e) => setName(e.target.value)}
-                    value={name}
+                    inputRef={register({ required: true })}
                     placeholder='Nombre'
-                    required
+                    fullWidth='true'
                   />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Apellido</Form.Label>
-                  <Form.Control
+                  <span className='text-danger'>
+                    {errors.name && "Nombre es un campo obligatorio"}
+                  </span>
+                </div>
+              </div>
+              <div className='row mt-3 ml-2 mr-2'>
+                <div className='col'>
+                  <Input
                     name='lastname'
-                    value={lastname}
-                    onChange={(e) => setLastname(e.target.value)}
+                    inputRef={register({ required: true })}
                     placeholder='Apellido'
-                    required
+                    fullWidth='true'
                   />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Correo Electronico</Form.Label>
-                  <Form.Control
+                  <span className='text-danger'>
+                    {errors.lastname && "Apellido es un campo obligatorio"}
+                  </span>
+                </div>
+              </div>
+              <div className='row mt-3 ml-2 mr-2'>
+                <div className='col'>
+                  <Input
                     type='email'
                     name='email'
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    inputRef={register({ required: true })}
                     placeholder='Correo Electronico'
-                    required
+                    fullWidth='true'
                   />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Contraseña</Form.Label>
-                  <Form.Control
+                  <span className='text-danger'>
+                    {errors.email &&
+                      "Correo electronico es un campo obligatorio"}
+                  </span>
+                </div>
+              </div>
+              <div className='row mt-3 ml-2 mr-2'>
+                <div className='col'>
+                  <Input
                     type='password'
                     name='password'
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    inputRef={register({ required: true })}
                     placeholder='Contraseña'
-                    required
+                    fullWidth='true'
                   />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <DatePicker
-                  selected={dateBirth}
-                  onChange={(date) => setDateBirth(date)}
-                />
-              </Col>
-              <Col>
-                <Button block type='submit' variant='primary'>
-                  {message}
+                  <span className='text-danger'>
+                    {errors.password && "Contraseña es un campo obligatorio"}
+                  </span>
+                </div>
+              </div>
+              <div className='row mt-3 ml-2 mr-2'>
+                <div className='col-md-8 offset-4'>
+                  <Button type='submit' variant='contained' color='primary'>
+                    {message}
+                  </Button>
+                </div>
+              </div>
+            </form>
+            <div className='mt-5'>
+              <h2 className='h5 text-center'>
+                ¿Ya tienes una cuenta?{" "}
+                <Button
+                  color='primary'
+                  component={Link}
+                  variant='outlined'
+                  to='/login'
+                >
+                  Iniciar sesion
                 </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
-            Cancelar
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+              </h2>
+            </div>
+          </Paper>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -5,9 +5,11 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "fontsource-roboto";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { development, production } from "./env";
+const uri = process.env.NODE_ENV === "production" ? production : development;
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000",
+  uri,
   cache: new InMemoryCache(),
 });
 

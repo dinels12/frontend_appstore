@@ -27,6 +27,7 @@ const GET_PUBLIC_SHOP = gql`
 export default function ShopView(props) {
   const { loading, error, data } = useQuery(GET_PUBLIC_SHOP, {
     variables: { nick: props.match.params.id },
+    pollInterval: 500,
   });
 
   if (loading) {

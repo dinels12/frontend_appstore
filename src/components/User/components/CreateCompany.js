@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { development, production } from "../../env";
-const web = process.env.NODE_ENV === "production" ? production : development;
 
 export default class CreateCompany extends Component {
   state = {
@@ -30,27 +26,6 @@ export default class CreateCompany extends Component {
       "Seguro que quieres registrar la cuenta como empresa?"
     );
     if (r) {
-      const { name, location } = this.state;
-      const token = Cookies.get("jwt");
-      const {
-        user: { _id: ownerId },
-      } = this.props;
-      const company = {
-        ownerId,
-        name,
-        location,
-      };
-      const res = await axios
-        .post(`${web}/company/register`, company, {
-          headers: { token },
-          withCredentials: true,
-        })
-        .catch((err) => {
-          if (err) this.setState({ message: err.response.data.message });
-        });
-      if (res) {
-        window.location.reload();
-      }
     }
   };
 
