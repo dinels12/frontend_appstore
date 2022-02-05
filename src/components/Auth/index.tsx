@@ -56,59 +56,62 @@ export const Login = () => {
   };
 
   return (
-    <div className='container mt-5'>
-      <div className='row'>
-        <div className='col-md-6 offset-3'>
+    <div className="container mt-5">
+      <div className="row">
+        <div className="col-md-6 offset-3">
           <Paper elevation={4}>
-            <h1 className='h3 text-center'>Inicia sesión en AppStore</h1>
+            <h1 className="h3 text-center">Inicia sesión en AppStore</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className='row mt-3 ml-2 mr-2'>
-                <div className='col'>
+              <div className="row mt-3 ml-2 mr-2">
+                <div className="col">
                   <Input
-                    type='email'
-                    name='email'
+                    type="email"
+                    name="email"
                     fullWidth={true}
-                    autoComplete='true'
-                    inputRef={register({ required: true })}
-                    placeholder='Correo electronico'
+                    autoComplete="true"
+                    inputRef={register({
+                      required: true,
+                      pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                    })}
+                    placeholder="Correo electronico"
                   />
-                  <span className='text-danger'>
+                  <span className="text-danger">
                     {errors.email &&
                       "Correo electronico es un campo obligatorio"}
                   </span>
                 </div>
               </div>
-              <div className='row mt-3 ml-2 mr-2'>
-                <div className='col'>
+              <div className="row mt-3 ml-2 mr-2">
+                <div className="col">
                   <Input
-                    type='password'
-                    name='password'
-                    autoComplete='true'
+                    type="password"
+                    name="password"
+                    autoComplete="true"
                     fullWidth={true}
                     inputRef={register({ required: true })}
-                    placeholder='Contraseña'
+                    placeholder="Contraseña"
                   />
-                  <span className='text-danger'>
+                  <span className="text-danger">
                     {errors.password && "Contraseña es un campo obligatorio"}
                   </span>
                 </div>
               </div>
-              <div className='row mt-3 ml-2 mr-2'>
-                <div className='col-md-8 offset-4'>
-                  <Button type='submit' variant='contained' color='primary'>
+              <div className="row mt-3 ml-2 mr-2">
+                <div className="col-md-8 offset-4">
+                  <Button type="submit" variant="contained" color="primary">
                     {message}
                   </Button>
                 </div>
               </div>
             </form>
-            <div className='mt-5'>
-              <h2 className='h5 text-center'>
+            <div className="mt-5">
+              <h2 className="h5 text-center">
                 ¿No tienes una cuenta aún?{" "}
                 <Button
-                  color='primary'
+                  color="primary"
                   component={Link}
-                  variant='outlined'
-                  to='/sign-up'
+                  variant="outlined"
+                  to="/sign-up"
                 >
                   Registrate
                 </Button>
@@ -146,89 +149,85 @@ export const Register = () => {
   };
 
   return (
-    <div className='container mt-5'>
-      <div className='row'>
-        <div className='col-md-6 offset-3'>
+    <div className="container mt-5">
+      <div className="row">
+        <div className="col-md-6 offset-3">
           <Paper elevation={4}>
-            <h1 className='h3 text-center'>Crea una cuenta</h1>
-            <h2 className='h5 text-center'>Es rapido y sencillo</h2>
+            <h1 className="h3 text-center">Crea una cuenta</h1>
+            <h2 className="h5 text-center">Es rapido y sencillo</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className='row mt-3 ml-2 mr-2'>
-                <div className='col'>
+              <div className="row mt-3 ml-2 mr-2">
+                <div className="col">
                   <Input
-                    name='name'
-                    inputRef={register({ required: true })}
-                    placeholder='Nombre'
+                    name="name"
+                    inputRef={register({
+                      required: true,
+                      pattern: /[a-zA-Z]+$/,
+                    })}
+                    placeholder="Nombre"
                     fullWidth={true}
                   />
-                  <span className='text-danger'>
+                  <span className="text-danger">
                     {errors.name && "Nombre es un campo obligatorio"}
                   </span>
                 </div>
               </div>
-              <div className='row mt-3 ml-2 mr-2'>
-                <div className='col'>
+              <div className="row mt-3 ml-2 mr-2">
+                <div className="col">
                   <Input
-                    name='lastname'
-                    inputRef={register({ required: true })}
-                    placeholder='Apellido'
+                    name="lastname"
+                    inputRef={register({
+                      required: true,
+                      pattern: /[a-zA-Z]+$/,
+                    })}
+                    placeholder="Apellido"
                     fullWidth={true}
                   />
-                  <span className='text-danger'>
+                  <span className="text-danger">
                     {errors.lastname && "Apellido es un campo obligatorio"}
                   </span>
                 </div>
               </div>
-              <div className='row mt-3 ml-2 mr-2'>
-                <div className='col'>
+              <div className="row mt-3 ml-2 mr-2">
+                <div className="col">
                   <Input
-                    type='email'
-                    name='email'
-                    inputRef={register({ required: true })}
-                    placeholder='Correo Electronico'
+                    type="email"
+                    name="email"
+                    inputRef={register({
+                      required: true,
+                      pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                    })}
+                    placeholder="Correo Electronico"
                     fullWidth={true}
                   />
-                  <span className='text-danger'>
+                  <span className="text-danger">
                     {errors.email &&
                       "Correo electronico es un campo obligatorio"}
                   </span>
                 </div>
               </div>
-              <div className='row mt-3 ml-2 mr-2'>
-                <div className='col'>
+              <div className="row mt-3 ml-2 mr-2">
+                <div className="col">
                   <Input
-                    type='password'
-                    name='password'
+                    type="password"
+                    name="password"
                     inputRef={register({ required: true })}
-                    placeholder='Contraseña'
+                    placeholder="Contraseña"
                     fullWidth={true}
                   />
-                  <span className='text-danger'>
+                  <span className="text-danger">
                     {errors.password && "Contraseña es un campo obligatorio"}
                   </span>
                 </div>
               </div>
-              <div className='row mt-3 ml-2 mr-2'>
-                <div className='col-md-8 offset-4'>
-                  <Button type='submit' variant='contained' color='primary'>
+              <div className="row mt-3 ml-2 mr-2">
+                <div className="col-md-8 offset-4">
+                  <Button type="submit" variant="contained" color="primary">
                     {message}
                   </Button>
                 </div>
               </div>
             </form>
-            <div className='mt-5'>
-              <h2 className='h5 text-center'>
-                ¿Ya tienes una cuenta?{" "}
-                <Button
-                  color='primary'
-                  component={Link}
-                  variant='outlined'
-                  to='/login'
-                >
-                  Iniciar sesion
-                </Button>
-              </h2>
-            </div>
           </Paper>
         </div>
       </div>

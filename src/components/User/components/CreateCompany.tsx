@@ -1,96 +1,56 @@
-import React, { Component } from "react";
-import { Button, Modal, Form, Row, Col } from "react-bootstrap";
+import React from "react";
+import { Button, Form, Row, Col } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 
-export default class CreateCompany extends Component {
-  state = {
-    show: false,
-    name: "",
-    location: "",
-    message: "Registrar Empresa",
-  };
-  handleClose = () => {
-    this.setState({ show: false });
-  };
+const CreateCompany = () => {
+  const { handleSubmit, register } = useForm();
 
-  handleShow = () => {
-    this.setState({ show: true });
-  };
-
-  onChange = (e: any) => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  newCompany = async (e: any) => {
-    e.preventDefault();
+  const newCompany = async (data: any) => {
     const r = window.confirm(
       "Seguro que quieres registrar la cuenta como empresa?"
     );
     if (r) {
+      console.log(data);
     }
   };
 
-  render() {
-    const { show, name, location, message } = this.state;
-    const { handleClose, handleShow, newCompany, onChange } = this;
-    return (
-      <>
-        <Button variant='secondary' onClick={handleShow} className='mr-2'>
-          Registrar como cuenta de empresa
-        </Button>
-
-        <Modal
-          show={show}
-          onHide={handleClose}
-          backdrop='static'
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Registro de Empresa</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form onSubmit={newCompany}>
-              <Row>
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Empresa</Form.Label>
-                    <Form.Control
-                      name='name'
-                      value={name}
-                      onChange={onChange}
-                      placeholder='Nombre de la Empresa'
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Ubicacion</Form.Label>
-                    <Form.Control
-                      name='location'
-                      value={location}
-                      onChange={onChange}
-                      placeholder='Ubicacion'
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Button block type='submit' variant='primary'>
-                    {message}
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='secondary' onClick={handleClose}>
-              Cancelar
+  return (
+    <div>
+      <Form onSubmit={handleSubmit(newCompany)}>
+        <Row>
+          <Col>
+            <Form.Group>
+              <Form.Label>Empresa</Form.Label>
+              <Form.Control
+                name="name"
+                ref={register}
+                placeholder="Nombre de la Empresa"
+                required
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group>
+              <Form.Label>Ubicacion</Form.Label>
+              <Form.Control
+                name="location"
+                ref={register}
+                placeholder="Ubicacion"
+                required
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button block type="submit" variant="primary">
+              Crear
             </Button>
-          </Modal.Footer>
-        </Modal>
-      </>
-    );
-  }
-}
+          </Col>
+        </Row>
+      </Form>
+    </div>
+  );
+};
+
+export default CreateCompany;
